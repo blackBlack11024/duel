@@ -13,8 +13,8 @@ func _ready() -> void:
 func new_save() -> Dictionary:
 	return {"gate": 0, "owned": ["laoban", "liukong"], "equip": {"melee": "laoban", "gun": "liukong", "gadget": "", "core": ""},
 		"mods": {}, "tune": {}, "quality": {}, "scrap": 30, "fine": 0, "tickets": 2, "tech": [], "cores": [],
-		"attempts": {}, "deaths": {}, "pages": [], "prompts": {}, "scrap_got": {}, "ng": 0, "ending": "", "combo_n": 0, "trained": false,
-		"opt": {"sens": 1.0, "fov": 95.0, "vol": 0.8, "music": 0.6, "assist_parry": false, "text_hints": false, "bars": false, "no_jam": false, "notebook": true, "fullscreen": false}}
+		"attempts": {}, "deaths": {}, "pages": [], "prompts": {}, "scrap_got": {}, "ng": 0, "ending": "", "combo_n": 0, "trained": false, "tut": 0,
+		"opt": {"sens": 1.0, "fov": 95.0, "vol": 0.8, "music": 0.6, "assist_parry": false, "text_hints": true, "bars": false, "no_jam": false, "notebook": true, "fullscreen": false}}
 
 func load_save() -> void:
 	S = new_save()

@@ -11,6 +11,8 @@ var sub_name: Label
 var title_big: Label
 var title_small: Label
 var title_bg: ColorRect
+var tut: Label
+var help: Label
 var overlay: ColorRect
 var omat: ShaderMaterial
 var splats = []
@@ -61,12 +63,30 @@ func _ready() -> void:
 	root = Control.new(); root.set_anchors_preset(Control.PRESET_FULL_RECT); root.mouse_filter = Control.MOUSE_FILTER_IGNORE; add_child(root)
 	root.draw.connect(_draw_root)
 	title_bg = ColorRect.new(); title_bg.color = Color(0, 0, 0, 0); title_bg.set_anchors_preset(Control.PRESET_FULL_RECT); title_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE; add_child(title_bg)
-	title_small = _label(34, Color(0.85, 0.8, 0.7)); title_small.set_anchors_preset(Control.PRESET_CENTER); title_small.position = Vector2(-600, -150); title_small.size = Vector2(1200, 50)
-	title_big = _label(150, Color(1, 1, 1)); title_big.set_anchors_preset(Control.PRESET_CENTER); title_big.position = Vector2(-600, -110); title_big.size = Vector2(1200, 200)
-	sub_name = _label(20, Color(0.9, 0.75, 0.4)); sub_name.set_anchors_preset(Control.PRESET_CENTER_BOTTOM); sub_name.position = Vector2(-500, -150); sub_name.size = Vector2(1000, 30)
-	sub = _label(30, Color(1, 1, 1)); sub.set_anchors_preset(Control.PRESET_CENTER_BOTTOM); sub.position = Vector2(-550, -120); sub.size = Vector2(1100, 90); sub.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	title_small = _label(34, Color(0.85, 0.8, 0.7)); _place(title_small, 0.5, 0.5, -600, -170, 600, -120)
+	title_big = _label(150, Color(1, 1, 1)); _place(title_big, 0.5, 0.5, -640, -120, 640, 90)
+	sub_name = _label(22, Color(0.95, 0.78, 0.4)); _place(sub_name, 0.5, 1.0, -500, -178, 500, -148)
+	sub = _label(32, Color(1, 1, 1)); _place(sub, 0.5, 1.0, -560, -146, 560, -40); sub.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; sub.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	tut = _label(30, Color(1, 0.95, 0.8)); _place(tut, 0.5, 0.0, -560, 70, 560, 170); tut.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	help = _label(24, Color(1, 1, 1)); _place(help, 0.5, 0.5, -520, -300, 520, 300); help.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT; help.visible = false
 	Fx.screen_blood.connect(_on_blood); Fx.screen_flash.connect(func(c, t): flash_c = c; flash_t = t)
 	_build_pause()
+
+func _place(c: Control, ax: float, ay: float, l: float, t: float, r: float, b: float) -> void:
+	c.anchor_left = ax; c.anchor_right = ax; c.anchor_top = ay; c.anchor_bottom = ay
+	c.offset_left = l; c.offset_top = t; c.offset_right = r; c.offset_bottom = b
+
+const HELP = """【目標】打空對手胸前的護板（閘條），最後一條打完後處決，或走到場地另一頭轉閘輪。
+
+【近戰】左鍵揮擊，按住左鍵蓄力重擊。右鍵格擋。
+【彈反】對手打到你的前一瞬間才按右鍵：不扣體力，對手架勢大增，你得到一格扳手。
+【紅光】武器發紅光的招擋不住，用空白鍵閃開。
+【架勢】準星外圈越紅越危險，滿了會跪下任人宰割。對手也一樣：他晃得越厲害越接近崩架。
+【處決】對手崩架（跪下）時靠近按 V，直接打掉一整條。
+【卸件】扳手集滿（手腕螺帽全亮）後，在對手出招時按 F，拆掉他的零件，封住那一招。
+【槍】Q 換手。左鍵開槍，右鍵瞄準，R 裝填。對手沒崩架時子彈主要打架勢，崩架時才大量扣血。
+【偏斜】拿著近戰武器時，對手開槍前紅線停住的瞬間按右鍵，可以彈開子彈。
+【喝水】拿近戰武器時按 R。左前臂的鋼板是你的血量。"""
 
 func _label(size: int, col: Color) -> Label:
 	var l = Label.new(); l.add_theme_font_override("font", font); l.add_theme_font_size_override("font_size", size); l.add_theme_color_override("font_color", col)
@@ -76,23 +96,36 @@ func _label(size: int, col: Color) -> Label:
 
 func _build_pause() -> void:
 	pause_menu = Control.new(); pause_menu.set_anchors_preset(Control.PRESET_FULL_RECT); pause_menu.visible = false; add_child(pause_menu)
-	var bg = ColorRect.new(); bg.color = Color(0, 0, 0, 0.7); bg.set_anchors_preset(Control.PRESET_FULL_RECT); pause_menu.add_child(bg)
-	var items = ["繼續", "回工棚", "離開遊戲"]
+	var bg = ColorRect.new(); bg.color = Color(0, 0, 0, 0.75); bg.set_anchors_preset(Control.PRESET_FULL_RECT); pause_menu.add_child(bg)
+	var items = ["繼續", "操作說明", "回工棚", "離開遊戲"]
 	for i in items.size():
 		var l = Label.new(); l.text = items[i]; l.add_theme_font_override("font", font); l.add_theme_font_size_override("font_size", 40)
-		l.set_anchors_preset(Control.PRESET_CENTER); l.position = Vector2(-200, -90 + i * 64); l.size = Vector2(400, 60); l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		_place(l, 0.5, 0.5, -200, -130 + i * 64, 200, -70 + i * 64); l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		l.name = "i%d" % i; pause_menu.add_child(l)
+	help.text = HELP; remove_child(help); pause_menu.add_child(help)
 
 func set_pause(on: bool) -> void:
-	paused = on; pause_menu.visible = on; pause_i = 0
+	paused = on; pause_menu.visible = on; pause_i = 0; show_help(false)
 	if not Net.active: get_tree().paused = on
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if on else Input.MOUSE_MODE_CAPTURED
 
 func _input(e: InputEvent) -> void:
 	if not paused: return
-	if e.is_action_pressed("ui_down") or e.is_action_pressed("mv_b"): pause_i = (pause_i + 1) % 3
-	elif e.is_action_pressed("ui_up") or e.is_action_pressed("mv_f"): pause_i = (pause_i + 2) % 3
-	elif e.is_action_pressed("ui_accept") or e.is_action_pressed("attack") or e.is_action_pressed("interact"): pause_choice.emit(pause_i)
+	if help.visible:
+		if e.is_action_pressed("ui_accept") or e.is_action_pressed("attack") or e.is_action_pressed("alt") or e.is_action_pressed("pause") or e.is_action_pressed("interact"):
+			show_help(false); get_viewport().set_input_as_handled()
+		return
+	if e.is_action_pressed("ui_down") or e.is_action_pressed("mv_b"): pause_i = (pause_i + 1) % 4
+	elif e.is_action_pressed("ui_up") or e.is_action_pressed("mv_f"): pause_i = (pause_i + 3) % 4
+	elif e.is_action_pressed("pause"):
+		set_pause(false); get_viewport().set_input_as_handled()
+	elif e.is_action_pressed("ui_accept") or e.is_action_pressed("attack") or e.is_action_pressed("interact"):
+		if pause_i == 1: show_help(true)
+		else: pause_choice.emit([0, -1, 1, 2][pause_i])
+
+func show_help(on: bool) -> void:
+	help.visible = on
+	for i in 4: pause_menu.get_node("i%d" % i).visible = not on
 
 func _on_blood(a: float) -> void:
 	var vs = root.size
@@ -148,7 +181,7 @@ func _process(d: float) -> void:
 			var b = float(pl.get_meta("bugs")) - rd; pl.set_meta("bugs", b); bugs = clamp(b * 2.0, 0.0, 1.0)
 	root.queue_redraw()
 	if paused:
-		for i in 3:
+		for i in 4:
 			var l = pause_menu.get_node("i%d" % i); l.modulate = Color(1, 0.8, 0.3) if i == pause_i else Color(0.7, 0.7, 0.7)
 
 func _draw_root() -> void:
@@ -211,7 +244,8 @@ func _draw_root() -> void:
 		Icons.action(root, prompt_act, pp, pad, 1.25, font, prompt_t)
 		if G.opt("text_hints"):
 			var wrd = Icons.WORDS.get(prompt_act, "")
-			root.draw_string(font, pp + Vector2(34, 8), wrd, HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(1, 1, 1))
+			root.draw_string_outline(font, pp + Vector2(38, 10), wrd, HORIZONTAL_ALIGNMENT_LEFT, -1, 28, 8, Color(0, 0, 0))
+			root.draw_string(font, pp + Vector2(38, 10), wrd, HORIZONTAL_ALIGNMENT_LEFT, -1, 28, Color(1, 0.9, 0.5))
 	# 筆記頁
 	if page_t > 0 and not page.is_empty():
 		var a = clamp(page_t, 0.0, 1.0)

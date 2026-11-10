@@ -27,6 +27,7 @@ func setup(comb, boss_id: String, w) -> void:
 func phase() -> int: return c.bar_i
 
 func think(d: float) -> void:
+	if id == "dummy": return
 	fight_t += d; said_t -= d
 	var t = c.target
 	if t == null or not t.alive(): return

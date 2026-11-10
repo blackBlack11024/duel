@@ -65,6 +65,23 @@ const MELEE_PARTS = {
 	"grip": [{"id": "std", "name": "原柄"}, {"id": "long", "name": "長柄", "m": {"reach": 1.15, "spd": 1.08}, "c": 15},
 		{"id": "wrap", "name": "纏布", "m": {"stab": 1.1, "reach": 0.96}, "c": 10}, {"id": "guard", "name": "護手", "m": {"stab": 1.25, "spd": 1.05}, "c": 20}],
 }
+const SLOT_NAMES = {"barrel": "槍管", "rifling": "膛線", "trigger": "扳機", "feed": "供彈", "stock": "槍托", "muzzle": "槍口", "sight": "瞄具", "powder": "裝藥", "bullet": "彈頭",
+	"steel": "鋼料", "quench": "淬火", "temper": "回火", "edge": "刃型", "balance": "配重", "grip": "握柄", "melee": "近戰", "gun": "槍", "gadget": "奇械", "core": "核心"}
+const STAT_NAMES = {"dmg": "傷害", "post": "架勢傷害", "range": "有效射程", "spread": "擴散", "recoil": "後座力", "draw": "出槍時間", "reload": "裝填時間", "rof": "射擊間隔", "mag": "彈倉容量", "relbad": "卡彈率",
+	"reserve": "備彈", "aim": "瞄準擴散", "tunnel": "瞄準時視野變窄", "flash": "槍口焰", "reach": "攻擊距離", "spd": "揮擊時間", "stab": "格擋穩定", "parry": "彈反窗口", "heavy": "重擊威力", "dur": "刃口耐久"}
+const LOWER_BETTER = ["spread", "recoil", "draw", "reload", "rof", "relbad", "aim", "tunnel", "flash", "spd"]
+const TECH_NAMES = {"grind": "磨刀（打贏老鮑）", "barrel": "車管（打贏薛快）", "chem": "配方（打贏阮金枝）", "powder": "裝藥（打贏啞鈴）", "hydro": "液壓（打贏葛蘭）"}
+const TRAITS = {
+	"laoban": "扳手錘。卸件只需要兩格扳手。", "banshan": "剁骨刀。重擊命中使對手持續出血。", "sanfen": "鋼筋長槍。攻擊距離最長，格擋不穩。",
+	"gemi": "長柄鐮。重擊把對手勾近一步。", "banyuan": "工兵鏟。格擋可以擋爆炸。", "shougong": "液壓打樁錘。重擊擋不住，但蓄力時幾乎走不動。",
+	"liukong": "左輪。不瞄準時連射很快但很散。", "duiban": "鋸短雙管。瞄準時開槍＝雙管齊發。貼臉最痛，遠了沒用。", "guahao": "槓桿步槍。瞄準時移動不減速，爆頭直接扣血。",
+	"changzui": "栓動長槍。一場五發。打中正在裝填或喝水的對手必定崩架。", "menlei": "榴彈拋射器。榴彈落地不炸，再按一次開火才引爆。", "dianming": "鉚釘槍。按住連射。釘滿三根後，下一次近戰額外打架勢。",
+	"huizhi": "鉤索弩。鉤牆把自己拉過去，鉤人把對方拉過來。", "shuiba": "煙燻罐。一團遮視線的煙，也能趕走蟲。", "jiadang": "蜂箱炮。放出一團追人的蟲。",
+	"laihui": "鋸片彈射器。鋸片會彈牆，嵌住後可以走過去撿回來。", "jieyixia": "磁吸手套。短時間內彈開射向你的子彈。", "guodian": "電瓶叉。電癱對手一瞬間，對手站在水裡時距離更遠。",
+	"xiejian": "卸件。扳手集滿後，在對手出招時拆掉他的零件。", "guobang": "過磅。重擊命中使對手體力回復減半。", "guahao_core": "掛號。近戰命中貼標，下一發子彈會自己找人。",
+	"fenchao": "分巢。按 G 放一個蟲巢佔地盤。", "yanshi": "延時。按 G 放地雷，再按一次引爆。", "gongqi": "工期。重擊蓄力時不會被打斷，但受傷加重。",
+}
+const AXIS_TEXT = "往右：威力與冷卻時間都增加。往左：相反。|往右：範圍或持續時間增加，效果略弱。往左：相反。"
 const FORGE_SLOTS = ["steel", "quench", "temper", "edge"]
 # 數值面板：[key, 圖示, 越小越好?]
 const GUN_STATS = [["dmg", "dmg", false], ["post", "post", false], ["range", "range", false], ["spread", "spread", true], ["recoil", "recoil", true], ["draw", "draw", true], ["reload", "reload", true], ["rof", "rof", true], ["mag", "mag", false], ["relbad", "rel", true]]
@@ -224,14 +241,14 @@ const BOSS = {
 			"laba_intro": "", "laba_kill": ["……", "……"], "laba_win": "",
 		}},
 }
-const DUMMY = {"name": "", "title": "", "voice": "", "bars": [99999.0], "posture": 120.0, "speed": 0.0, "block": 0.3, "dodge": 0.0, "pref": 2.5,
-	"melee": "pipe", "gun": "liukong", "arena": "hub", "odds": 0, "rig": {"h": 1.8, "bulk": 1.0, "skin": Color(0.4, 0.3, 0.22), "cloth": Color(0.35, 0.3, 0.25), "acc": "dummy"},
+const DUMMY = {"name": "", "title": "", "voice": "", "bars": [99999.0], "posture": 120.0, "speed": 0.0, "block": 0.0, "dodge": 0.0, "pref": 2.5,
+	"melee": "", "gun": "", "arena": "hub", "odds": 0, "rig": {"h": 1.8, "bulk": 1.0, "skin": Color(0.45, 0.32, 0.2), "cloth": Color(0.42, 0.3, 0.18), "acc": "dummy"},
 	"parts": {"spring": "彈簧"}, "drops": {},
 	"moves": {
-		"slow": {"anim": "swing_r", "wu": 1.1, "rec": 1.2, "dmg": 4, "post": 10, "reach": 2.8, "r": [0, 3.4], "w": 3},
-		"fast": {"anim": "swing_l", "wu": 0.55, "rec": 1.2, "dmg": 4, "post": 10, "reach": 2.8, "r": [0, 3.4], "w": 2, "part": "spring"},
-		"red": {"anim": "overhead", "wu": 1.2, "rec": 1.4, "dmg": 6, "post": 14, "reach": 2.9, "arc": 60, "unb": true, "r": [0, 3.4], "w": 1},
-		"shot": {"anim": "shoot", "kind": "shot", "wu": 1.2, "rec": 1.2, "dmg": 3, "post": 4, "r": [4.5, 30], "w": 3, "snd": "shot_revolver"},
+		"slow": {"anim": "swing_r", "wu": 1.1, "rec": 1.2, "dmg": 4, "post": 10, "reach": 2.8, "r": [0, 3.4], "w": 0},
+		"fast": {"anim": "swing_l", "wu": 0.55, "rec": 1.2, "dmg": 4, "post": 10, "reach": 2.8, "r": [0, 3.4], "w": 0, "part": "spring"},
+		"red": {"anim": "overhead", "wu": 1.2, "rec": 1.4, "dmg": 6, "post": 14, "reach": 2.9, "arc": 60, "unb": true, "r": [0, 3.4], "w": 0},
+		"shot": {"anim": "shoot", "kind": "shot", "wu": 1.2, "rec": 1.2, "dmg": 3, "post": 4, "r": [4.5, 30], "w": 0, "snd": "shot_revolver"},
 	}, "lines": {}}
 const PC_LINES = {"bao": "", "xue": "", "ruan": "", "final": "……兩隻手。"}
 
@@ -298,3 +315,13 @@ func wname(id: String) -> String:
 	if GADGETS.has(id): return GADGETS[id]["name"]
 	if CORES.has(id): return CORES[id]["name"]
 	return {"knife": "拆信刀", "pipewrench": "管鉗", "qikong": "七孔"}.get(id, id)
+
+# 零件效果的文字說明：[[文字, 是否變好], ...]
+func part_effects(p: Dictionary) -> Array:
+	var out = []
+	for k in p.get("m", {}):
+		var v = float(p["m"][k])
+		var pct = int(round((v - 1.0) * 100.0))
+		if pct == 0: continue
+		out.append(["%s %s%d%%" % [STAT_NAMES.get(k, k), "+" if pct > 0 else "", pct], (v > 1.0) != LOWER_BETTER.has(k)])
+	return out

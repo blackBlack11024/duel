@@ -152,12 +152,15 @@ func explode(pos: Vector3, r: float, dmg: float, post: float, owner_c) -> void:
 		var out = cb.take({"dmg": dmg * k, "post": post * k, "kind": "explosion", "unb": false, "heavy": true, "dir": Vector3(d.x, 0, d.z).normalized(), "move": "lob", "push": 9.0 * k})
 		if out == "hit" and cb.is_boss: Fx.gore(cb.global_position + Vector3(0, 1.1, 0), d.normalized(), 5)
 	for o in objs.duplicate():
-		if is_instance_valid(o) and o.kind in ["grenade", "mine", "hive"] and o.global_position.distance_to(pos) < r * 0.7 and o.global_position.distance_to(pos) > 0.05:
-			if o.kind == "hive": o.shot_hit(owner_c if owner_c else player, 40.0)
+		if is_instance_valid(o) and o.kind in ["grenade", "mine", "hive", "prop"] and o.global_position.distance_to(pos) < r * (1.0 if o.kind == "prop" else 0.7) and o.global_position.distance_to(pos) > 0.05:
+			if o.kind == "hive" or o.kind == "prop": o.shot_hit(owner_c if owner_c else player, 40.0)
 			else: get_tree().create_timer(0.15).timeout.connect(func(): if is_instance_valid(o): o.detonate())
 
 func _add_obj(o, pos: Vector3, owner_c) -> void:
 	o.world = self; o.owner_c = owner_c; o.position = pos; add_child(o); objs.append(o)
+
+func spawn_prop(ptype: String, pos: Vector3, yaw: float = 0.0):
+	var p = Objs.Prop.new(); p.ptype = ptype; p.rotation.y = yaw; _add_obj(p, pos, null); return p
 
 func spawn_grenade(owner_c, pos: Vector3, vel: Vector3, dmg: float, post: float, manual: bool):
 	var g = Objs.Grenade.new(); g.vel = vel; g.dmg = dmg; g.post = post; g.manual = manual; _add_obj(g, pos, owner_c)
@@ -295,6 +298,12 @@ func _story_start() -> void:
 	Snd.music("mus_final" if bid == "zha" else "mus_fight")
 
 func _on_player_ev(n: String, data) -> void:
+	if arena:
+		match n:
+			"parry", "deflect": arena.cheer(0.45)
+			"disarm_ok": arena.cheer(0.8)
+			"hurt": arena.cheer(0.2)
+			"dead": arena.cheer(1.0)
 	match n:
 		"dead":
 			if over: return
@@ -314,6 +323,11 @@ func _on_player_ev(n: String, data) -> void:
 			if data != null and story: hud.say("", "—— " + str(data) + " ——", 1.4)
 
 func _on_boss_ev(n: String, data) -> void:
+	if arena:
+		match n:
+			"hurt": arena.cheer(0.15 + float(data.get("dmg", 10)) / 80.0)
+			"broken", "kneel": arena.cheer(1.0)
+			"phase", "dead": arena.cheer(1.2)
 	match n:
 		"phase":
 			Snd.play("gate", -4.0, 1.2); Fx.add_shake(0.5)
@@ -428,6 +442,7 @@ func _prompts(d: float) -> void:
 	hud.prompt(p, pos)
 
 func _pause_choice(i: int) -> void:
+	if i < 0: return
 	hud.set_pause(false)
 	match i:
 		1:

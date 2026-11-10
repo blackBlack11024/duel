@@ -211,3 +211,52 @@ class Saw extends Obj:
 				stuck = true; global_position = r["position"] + n * 0.05; return
 			vel = vel.bounce(n); global_position = r["position"] + n * 0.1
 		else: global_position = nxt
+
+class Prop extends Obj:
+	var ptype = "crate"
+	var hp = 20.0
+	var size = Vector3(0.9, 0.9, 0.9)
+	var mat: Material
+	func _ready() -> void:
+		kind = "prop"
+		var sb = StaticBody3D.new(); sb.collision_layer = 1 | 4; sb.set_meta("obj", self); add_child(sb)
+		var cs = CollisionShape3D.new(); sb.add_child(cs)
+		match ptype:
+			"crate":
+				size = Vector3(0.9, 0.9, 0.9) * randf_range(0.8, 1.25); mat = M.wood(Color(0.42, 0.3, 0.18)); hp = 22.0
+				M.box(self, size, Vector3(0, size.y * 0.5, 0), mat)
+				for sx in [-1, 1]: M.box(self, Vector3(0.06, size.y * 1.02, size.z * 1.02), Vector3(sx * size.x * 0.42, size.y * 0.5, 0), M.wood(Color(0.3, 0.2, 0.12)))
+				M.box(self, Vector3(size.x * 1.02, 0.06, size.z * 1.02), Vector3(0, size.y * 0.85, 0), M.iron())
+			"barrel", "redbarrel":
+				size = Vector3(0.7, 1.1, 0.7); hp = 26.0
+				mat = M.rust(Color(0.7, 0.12, 0.08)) if ptype == "redbarrel" else M.rust(Color(0.3, 0.36, 0.4))
+				M.cyl(self, 0.35, 1.1, Vector3(0, 0.55, 0), mat, Vector3.ZERO, -1.0, 14)
+				for hy in [0.2, 0.55, 0.9]: M.cyl(self, 0.365, 0.05, Vector3(0, hy, 0), M.iron(), Vector3.ZERO, -1.0, 14)
+				if ptype == "redbarrel": M.box(self, Vector3(0.3, 0.3, 0.02), Vector3(0, 0.6, -0.36), M.glow(Color(1, 0.7, 0.1), 0.6))
+			"pot":
+				size = Vector3(0.6, 0.8, 0.6); mat = M.concrete(Color(0.55, 0.38, 0.28)); hp = 8.0
+				M.cyl(self, 0.2, 0.5, Vector3(0, 0.25, 0), mat, Vector3.ZERO, 0.32, 12); M.cyl(self, 0.32, 0.25, Vector3(0, 0.62, 0), mat, Vector3.ZERO, 0.16, 12)
+			"planks":
+				size = Vector3(2.4, 1.3, 0.2); mat = M.wood(Color(0.38, 0.27, 0.16)); hp = 16.0
+				for i in 5: M.box(self, Vector3(0.42, 1.3 + randf_range(-0.15, 0.15), 0.06), Vector3(-0.96 + i * 0.48, 0.65, 0), mat, Vector3(0, 0, randf_range(-4, 4)))
+				M.box(self, Vector3(2.4, 0.1, 0.1), Vector3(0, 0.9, 0.06), M.wood(Color(0.3, 0.2, 0.12)))
+		var sh = BoxShape3D.new(); sh.size = size; cs.shape = sh; cs.position = Vector3(0, size.y * 0.5, 0)
+	func melee_hit(by, mv: Dictionary) -> void: _dmg(float(mv.get("dmg", 15)), by)
+	func shot_hit(by, dmg: float) -> void: _dmg(dmg, by)
+	func _dmg(a: float, by) -> void:
+		if is_queued_for_deletion(): return
+		hp -= a
+		var c = global_position + Vector3(0, size.y * 0.5, 0)
+		Snd.at("hit_block", c, -2.0, 0.55); Fx.dust(c, 5, Color(0.5, 0.42, 0.3, 0.6))
+		if hp > 0:
+			rotation.z = randf_range(-0.05, 0.05); return
+		for i in 9: Fx.gib(c + Vector3(randf_range(-0.3, 0.3), randf_range(-0.3, 0.3), randf_range(-0.3, 0.3)), Vector3(randf_range(-5, 5), randf_range(2, 7), randf_range(-5, 5)), Vector3(randf_range(0.1, 0.4), 0.05, randf_range(0.08, 0.25)), mat, 12.0)
+		Fx.dust(c, 16, Color(0.45, 0.38, 0.28, 0.7)); Snd.at("plate", c, 2.0, 0.6); Fx.add_shake(0.15)
+		if ptype == "pot":
+			# 水。在這裡是錢。
+			Fx._parts(c, 40, M.ghost(Color(0.6, 0.85, 1.0, 0.7)), 0.04, 0.8, 5.0, Vector3.UP, 70.0)
+			Snd.at("step_water", c, 6.0, 0.8)
+		if world and world.arena: world.arena.cheer(0.25)
+		var w = world
+		remove()
+		if ptype == "redbarrel" and w: w.explode(c, 4.2, 38.0, 45.0, by)

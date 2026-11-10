@@ -9,7 +9,7 @@ func _ready() -> void:
 	args = Array(OS.get_cmdline_user_args())
 	var i = args.find("--test")
 	var mode = args[i + 1] if args.size() > i + 1 else "parse"
-	G.S = G.new_save(); G.S["prompts"] = {"alt": 9, "dodge": 9}
+	G.S = G.new_save(); G.S["prompts"] = {"alt": 9, "dodge": 9}; G.S["tut"] = 99 if mode != "hub" else 3
 	match mode:
 		"parse":
 			for f in DirAccess.get_files_at("res://src"):
@@ -19,12 +19,16 @@ func _ready() -> void:
 			get_tree().quit()
 		"sim": _sim(args[i + 2], float(args[i + 3]), int(args[i + 4]))
 		"shot": _shot(args[i + 2], float(args[i + 3]))
+		"intro":
+			first = true; _shot(args[i + 2], float(args[i + 3]))
 		"hub": _hubshot()
+		"view": _view()
 		"net": _net(args[i + 2])
 
+var first = false
 func _mk(boss: String) -> Node:
 	var f = load("res://src/fight.gd").new(); f.cfg = {"mode": "story", "boss": boss}
-	G.S["gate"] = D.ORDER.find(boss); G.S["attempts"][boss] = 3
+	G.S["gate"] = D.ORDER.find(boss); G.S["attempts"][boss] = 0 if first else 3
 	add_child(f); return f
 
 func _sim(boss: String, skill: float, n: int) -> void:
@@ -96,4 +100,17 @@ func _net(role: String) -> void:
 		t += 5.0
 		if not is_instance_valid(f): break
 		print("%s t=%.0f myhp=%.0f foehp=%.0f wins=%s dist=%.1f state=%d" % [role, t, f.player.hp, f.boss.hp, str(f.wins), f.player.dist_to(f.boss), f.player.state])
+	get_tree().quit()
+
+func _view() -> void:
+	# 每個場地一張全景
+	DirAccess.make_dir_absolute("res://shots")
+	for b in D.ORDER:
+		var f = _mk(b)
+		f.pctrl.locked = true; f.boss.ctrl = null; f.hud.hide_cross = true
+		f.player.pitch = 0.22
+		for i in 25: await get_tree().process_frame
+		get_viewport().get_texture().get_image().save_png("res://shots/view_%s.png" % b)
+		f.over = true; f.busy = true; remove_child(f); f.queue_free()
+		await get_tree().process_frame
 	get_tree().quit()

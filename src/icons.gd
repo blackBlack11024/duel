@@ -3,7 +3,7 @@ extends RefCounted
 const KEYS = {"attack": ["mouse", 0], "alt": ["mouse", 1], "dodge": ["wide", "空白"], "interact": ["key", "V"], "core": ["key", "F"], "core2": ["key", "G"],
 	"switch": ["key", "Q"], "reload": ["key", "R"], "drink": ["key", "R"], "gadget": ["key", "E"], "jump": ["wide", "Ctrl"], "mv": ["key", "WASD"], "hold": ["mouse", 0]}
 const PADS = {"attack": "RT", "alt": "LT", "dodge": "B", "interact": "RS", "core": "LB", "core2": "↓", "switch": "Y", "reload": "X", "drink": "↑", "gadget": "RB", "jump": "A", "mv": "LS", "hold": "RT"}
-const WORDS = {"attack": "攻擊", "alt": "格擋", "dodge": "閃避", "interact": "處決", "core": "卸件", "switch": "換手", "reload": "裝填", "drink": "喝水", "gadget": "奇械", "hold": "按住", "core2": "核心"}
+const WORDS = {"attack": "攻擊", "alt": "格擋（抓準瞬間＝彈反）", "dodge": "紅光！閃開", "interact": "互動 / 處決", "core": "卸件！", "switch": "換手", "reload": "裝填", "drink": "喝水", "gadget": "奇械", "hold": "按住", "core2": "核心"}
 
 static func action(ci: CanvasItem, act: String, pos: Vector2, pad: bool, sc: float = 1.0, font: Font = null, pulse: float = 0.0) -> void:
 	var col = Color(1, 1, 1, 0.95)

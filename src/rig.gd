@@ -144,7 +144,10 @@ func _acc(a: String, chest: Node3D, spine: Node3D, head: Node3D, root: Node3D) -
 			M.box(chest, Vector3(0.5, 0.36, 0.3) * s, Vector3(0, 0.14, 0) * s, M.cloth(Color(0.35, 0.25, 0.15)))
 			M.box(head, Vector3(0.2, 0.05, 0.02) * s, Vector3(0, 0.17, -0.125) * s, M.iron())
 		"dummy":
-			M.cyl(head, 0.14 * s, 0.2 * s, Vector3(0, 0.16, 0) * s, M.rust())
+			M.cyl(root, 0.09 * s, 1.9 * s, Vector3(0, -0.05, 0.12) * s, M.wood(Color(0.35, 0.24, 0.14)))
+			M.cyl(root, 0.45 * s, 0.12 * s, Vector3(0, -0.92, 0.1) * s, M.rust())
+			M.cyl(head, 0.17 * s, 0.24 * s, Vector3(0, 0.16, 0) * s, M.rust(), Vector3.ZERO, 0.13 * s)
+			for i in 3: M.cyl(spine, 0.24 * s, 0.05 * s, Vector3(0, 0.0 + i * 0.2, 0) * s, M.cloth(Color(0.5, 0.42, 0.3)))
 
 func _plates(chest: Node3D, bars: int, b: float) -> void:
 	plates.clear()
