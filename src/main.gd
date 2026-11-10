@@ -26,7 +26,8 @@ func _swap(kind: String, arg) -> void:
 	if cur: cur.queue_free(); cur = null
 	var n: Node
 	match kind:
-		"hub": n = load("res://src/hub.gd").new()
+		"hub":
+			n = load("res://src/hub.gd").new(); n.arg = arg
 		"fight": n = load("res://src/fight.gd").new(); n.cfg = arg
 		"ending": n = load("res://src/ending.gd").new(); n.which = arg
 	n.name = kind; add_child(n); cur = n

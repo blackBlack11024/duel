@@ -23,12 +23,12 @@ func build(k: String, w = null) -> void:
 	kind = k; world = w
 	var we = WorldEnvironment.new(); env = Environment.new(); we.environment = env; add_child(we)
 	env.background_mode = Environment.BG_COLOR; env.background_color = Color(0.55, 0.5, 0.42)
-	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR; env.ambient_light_color = Color(0.5, 0.48, 0.5); env.ambient_light_energy = 0.55
-	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC; env.tonemap_exposure = 1.05
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR; env.ambient_light_color = Color(0.5, 0.48, 0.5); env.ambient_light_energy = 0.4
+	env.tonemap_mode = Environment.TONE_MAPPER_ACES; env.tonemap_exposure = 0.8
 	env.glow_enabled = true; env.glow_intensity = 0.5; env.glow_bloom = 0.12; env.glow_hdr_threshold = 1.1
 	env.fog_enabled = true; env.fog_light_color = Color(0.6, 0.52, 0.42); env.fog_density = 0.012
 	env.adjustment_enabled = true; env.adjustment_contrast = 1.15; env.adjustment_saturation = 0.9
-	sun = DirectionalLight3D.new(); sun.rotation_degrees = Vector3(-62, 25, 0); sun.light_energy = 2.2; sun.light_color = Color(1.0, 0.9, 0.75)
+	sun = DirectionalLight3D.new(); sun.rotation_degrees = Vector3(-62, 25, 0); sun.light_energy = 1.5; sun.light_color = Color(1.0, 0.9, 0.75)
 	sun.shadow_enabled = true; sun.directional_shadow_max_distance = 60.0; add_child(sun)
 	match k:
 		"spillway": _spillway()
@@ -73,13 +73,13 @@ func _crowd(z0: float, z1: float, x: float, y: float) -> void:
 
 func _spillway() -> void:
 	half = Vector2(11, 17); p_spawn = Vector3(0, 0, 12); b_spawn = Vector3(0, 0, -9)
-	_floor(24, 36, M.concrete(Color(0.52, 0.5, 0.46)))
+	_floor(24, 36, M.concrete(Color(0.36, 0.33, 0.29)))
 	_box_room(11, 17, 40)
 	for sx in [-5.5, 5.5]:
 		for sz in [-6.0, 6.0]: _wall(Vector3(1.6, 14, 1.6), Vector3(sx, 7, sz), M.concrete(Color(0.42, 0.4, 0.38)))
 	_crowd(-15, 15, -10.2, 9.0); _crowd(-15, 15, 10.2, 9.0)
 	_shaft(Vector3(0, 0, -2), 6, 40)
-	sun.rotation_degrees = Vector3(-78, 10, 0); sun.light_energy = 3.0
+	sun.rotation_degrees = Vector3(-66, 18, 0); sun.light_energy = 1.5
 	env.background_color = Color(0.85, 0.75, 0.6); env.fog_density = 0.018
 	# 閘門
 	_wall(Vector3(8, 9, 0.6), Vector3(0, 4.5, -17.2), M.rust()); 
@@ -124,7 +124,7 @@ func _silt() -> void:
 			if (ix + iz) % 2 == 0 and not (ix == 0 and abs(iz) == 2):
 				var horiz = (ix * 3 + iz) % 3 != 0
 				_wall(Vector3(3.4 if horiz else 0.5, 0.75, 0.5 if horiz else 3.4), Vector3(ix * 5.0, 0.37, iz * 5.0), M.concrete(Color(0.4, 0.37, 0.32)))
-	sun.rotation_degrees = Vector3(-50, -40, 0); sun.light_energy = 2.6; sun.light_color = Color(1, 0.82, 0.6)
+	sun.rotation_degrees = Vector3(-50, -40, 0); sun.light_energy = 1.5; sun.light_color = Color(1, 0.82, 0.6)
 	env.background_color = Color(0.75, 0.62, 0.45); env.fog_light_color = Color(0.7, 0.58, 0.42); env.fog_density = 0.022
 	_crowd(-12, 12, -13.2, 7.0)
 

@@ -224,6 +224,15 @@ const BOSS = {
 			"laba_intro": "", "laba_kill": ["……", "……"], "laba_win": "",
 		}},
 }
+const DUMMY = {"name": "", "title": "", "voice": "", "bars": [99999.0], "posture": 120.0, "speed": 0.0, "block": 0.3, "dodge": 0.0, "pref": 2.5,
+	"melee": "pipe", "gun": "liukong", "arena": "hub", "odds": 0, "rig": {"h": 1.8, "bulk": 1.0, "skin": Color(0.4, 0.3, 0.22), "cloth": Color(0.35, 0.3, 0.25), "acc": "dummy"},
+	"parts": {"spring": "彈簧"}, "drops": {},
+	"moves": {
+		"slow": {"anim": "swing_r", "wu": 1.1, "rec": 1.2, "dmg": 4, "post": 10, "reach": 2.8, "r": [0, 3.4], "w": 3},
+		"fast": {"anim": "swing_l", "wu": 0.55, "rec": 1.2, "dmg": 4, "post": 10, "reach": 2.8, "r": [0, 3.4], "w": 2, "part": "spring"},
+		"red": {"anim": "overhead", "wu": 1.2, "rec": 1.4, "dmg": 6, "post": 14, "reach": 2.9, "arc": 60, "unb": true, "r": [0, 3.4], "w": 1},
+		"shot": {"anim": "shoot", "kind": "shot", "wu": 1.2, "rec": 1.2, "dmg": 3, "post": 4, "r": [4.5, 30], "w": 3, "snd": "shot_revolver"},
+	}, "lines": {}}
 const PC_LINES = {"bao": "", "xue": "", "ruan": "", "final": "……兩隻手。"}
 
 # 筆記本草圖。cmd: man(x,y,pose) / x / o / arrow / word / obj
@@ -245,7 +254,7 @@ const PAGES = {
 }
 
 # 房間碼符號
-const SYMS = ["齒輪", "水滴", "扳手", "螺帽", "火", "錘", "彈", "刀", "蜂", "雷", "閘", "井", "鹽", "鐵", "骨", "煙"]
+const SYMS = ["輪", "水", "扳", "帽", "火", "錘", "彈", "刀", "蜂", "雷", "閘", "井", "鹽", "鐵", "骨", "煙"]
 
 func melee_parts() -> Dictionary: return MELEE_PARTS
 func gun_parts() -> Dictionary: return GUN_PARTS

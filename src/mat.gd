@@ -14,9 +14,9 @@ static func noise(kind: String) -> Texture2D:
 			n.frequency = 0.03; n.fractal_octaves = 4; n.noise_type = FastNoiseLite.TYPE_CELLULAR
 			var g2 = Gradient.new(); g2.set_color(0, Color(0.35, 0.2, 0.12)); g2.set_color(1, Color(1, 0.95, 0.9)); t.color_ramp = g2
 		"bump":
-			n.frequency = 0.04; n.fractal_octaves = 5; t.as_normal_map = true; t.bump_strength = 6.0
+			n.frequency = 0.04; n.fractal_octaves = 5; t.as_normal_map = true; t.bump_strength = 1.6
 		"fine":
-			n.frequency = 0.15; n.fractal_octaves = 3; t.as_normal_map = true; t.bump_strength = 3.0
+			n.frequency = 0.15; n.fractal_octaves = 3; t.as_normal_map = true; t.bump_strength = 0.7
 	t.noise = n; ntex[kind] = t; return t
 
 static func mk(key: String, col: Color, rough: float, metal: float, tex: String = "", bump: String = "", scale: float = 0.5) -> StandardMaterial3D:
@@ -33,13 +33,13 @@ static func concrete(c: Color = Color(0.5, 0.48, 0.45)) -> Material: return mk("
 static func rust(c: Color = Color(0.5, 0.3, 0.18)) -> Material: return mk("rust", c, 0.75, 0.55, "rust", "bump", 0.8)
 static func steel(c: Color = Color(0.62, 0.64, 0.66)) -> Material: return mk("steel", c, 0.32, 0.95, "grime", "fine", 1.5)
 static func iron(c: Color = Color(0.2, 0.2, 0.22)) -> Material: return mk("iron", c, 0.5, 0.85, "grime", "fine", 1.2)
-static func skin(c: Color) -> Material: return mk("skin", c, 0.55, 0.0, "grime", "fine", 2.0)
+static func skin(c: Color) -> Material: return mk("skin", c, 0.5, 0.0, "", "", 2.0)
 static func cloth(c: Color) -> Material: return mk("cloth", c, 1.0, 0.0, "grime", "bump", 2.0)
 static func wood(c: Color = Color(0.4, 0.27, 0.16)) -> Material: return mk("wood", c, 0.8, 0.0, "rust", "fine", 1.0)
 static func mud() -> Material: return mk("mud", Color(0.36, 0.3, 0.24), 1.0, 0.0, "rust", "bump", 0.15)
 static func blood() -> Material:
 	if cache.has("blood"): return cache["blood"]
-	var m = StandardMaterial3D.new(); m.albedo_color = Color(0.42, 0.01, 0.01); m.roughness = 0.12; m.metallic = 0.3
+	var m = StandardMaterial3D.new(); m.albedo_color = Color(0.2, 0.0, 0.0); m.roughness = 0.1; m.metallic = 0.45
 	cache["blood"] = m; return m
 static func glow(c: Color, e: float = 3.0) -> Material:
 	var k = "glow" + str(c) + str(e)

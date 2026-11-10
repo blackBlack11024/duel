@@ -84,8 +84,8 @@ func _on_ev(n: String, data) -> void:
 func _stain() -> void:
 	if stains > 14 or not rig.J.has("chest"): return
 	stains += 1
-	var j = rig.J[["chest", "spine", "head"][randi() % 3]] if rig.J.has("head") else rig.J["chest"]
-	M.ball(j, randf_range(0.04, 0.09), Vector3(randf_range(-0.2, 0.2), randf_range(0, 0.3), -0.14 * float(rig.p.get("bulk", 1.0)) * rig.s), M.blood(), Vector3(1, 1.5, 0.3))
+	var b = float(rig.p.get("bulk", 1.0)) * rig.s
+	M.ball(rig.J["chest"], randf_range(0.03, 0.07), Vector3(randf_range(-0.18, 0.18) * b, randf_range(0.0, 0.28) * rig.s, -0.15 * b), M.blood(), Vector3(1.4, 1.8, 0.25))
 
 func _process(d: float) -> void:
 	if c == null: return

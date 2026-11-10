@@ -20,7 +20,7 @@ var said_t = 0.0
 var ng = 0
 
 func setup(comb, boss_id: String, w) -> void:
-	c = comb; id = boss_id; cfg = D.BOSS[id]; world = w; c.ctrl = self
+	c = comb; id = boss_id; cfg = D.BOSS[id] if D.BOSS.has(id) else D.DUMMY; world = w; c.ctrl = self
 	c.ev.connect(_on_ev)
 	ng = int(G.S.get("ng", 0))
 
