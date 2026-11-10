@@ -1,0 +1,30 @@
+; Engine configuration file.
+config_version=5
+
+[application]
+config/name="落閘"
+run/main_scene="res://main.tscn"
+config/features=PackedStringArray("4.4", "GL Compatibility")
+
+[autoload]
+D="*res://src/data.gd"
+G="*res://src/game.gd"
+Snd="*res://src/snd.gd"
+Fx="*res://src/fx.gd"
+Net="*res://src/net.gd"
+
+[display]
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[physics]
+common/physics_ticks_per_second=60
+3d/default_gravity=18.0
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+anti_aliasing/quality/msaa_3d=1
+lights_and_shadows/directional_shadow/size=2048
