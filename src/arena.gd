@@ -23,7 +23,7 @@ func build(k: String, w = null) -> void:
 	kind = k; world = w
 	var we = WorldEnvironment.new(); env = Environment.new(); we.environment = env; add_child(we)
 	env.background_mode = Environment.BG_COLOR; env.background_color = Color(0.55, 0.5, 0.42)
-	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR; env.ambient_light_color = Color(0.5, 0.48, 0.5); env.ambient_light_energy = 0.6
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR; env.ambient_light_color = Color(0.5, 0.48, 0.5); env.ambient_light_energy = 0.8
 	env.tonemap_mode = Environment.TONE_MAPPER_ACES; env.tonemap_exposure = 0.8
 	env.glow_enabled = true; env.glow_intensity = 0.5; env.glow_bloom = 0.12; env.glow_hdr_threshold = 1.1
 	env.fog_enabled = true; env.fog_light_color = Color(0.6, 0.52, 0.42); env.fog_density = 0.012
@@ -203,14 +203,14 @@ func _gallery() -> void:
 	_wall(Vector3(14, 1, 54), Vector3(0, 11.5, 0), M.concrete(Color(0.3, 0.3, 0.32)))
 	for i in 9:
 		M.box(self, Vector3(12.5, 0.35, 0.35), Vector3(0, 6.0, -24 + i * 6.0), M.rust())
-		if i % 2 == 0: _lamp(Vector3(randf_range(-3, 3), 5.4, -24 + i * 6.0), Color(1.0, 0.85, 0.55), 3.2, 13, i == 4)
+		if i % 2 == 0: _lamp(Vector3(randf_range(-3, 3), 5.4, -24 + i * 6.0), Color(1.0, 0.85, 0.55), 6.0, 18, i == 4)
 	for z in [-18.0, -6.0, 6.0, 16.0]:
 		var sx = 3.6 if int(z) % 12 == 0 else -3.6
 		_wall(Vector3(1.8, 1.3, 1.4), Vector3(sx, 0.65, z), M.wood()); _wall(Vector3(1.0, 0.9, 1.0), Vector3(sx * 0.9, 1.75, z), M.wood(Color(0.5, 0.35, 0.2)))
 	for i in 3: M.cyl(self, 0.25, 54, Vector3(-5.6, 2.0 + i * 0.7, 0), M.rust(), Vector3(90, 0, 0))
 	_stand(-5.5, -22, 22, 3.4, 1, 1.0); _stand(5.5, -22, 22, 3.4, 1, -1.0); _dress(false, false)
 	_props(_scatter(8, ["crate", "crate", "barrel", "pot"]))
-	sun.visible = false; env.background_color = Color(0.03, 0.03, 0.04); env.ambient_light_energy = 0.28; env.fog_light_color = Color(0.2, 0.2, 0.25); env.fog_density = 0.03
+	sun.visible = false; env.background_color = Color(0.03, 0.03, 0.04); env.ambient_light_energy = 0.8; env.fog_light_color = Color(0.2, 0.2, 0.25); env.fog_density = 0.03
 
 func _engine() -> void:
 	round_r = 14.0; half = Vector2(14, 14); p_spawn = Vector3(0, 0, 11); b_spawn = Vector3(0, 0, -9)
@@ -226,7 +226,7 @@ func _engine() -> void:
 	_props(_scatter(9, ["pot", "pot", "crate", "barrel"]))
 	sun.rotation_degrees = Vector3(-80, 0, 0); sun.light_energy = 1.4; sun.light_color = Color(0.85, 1.0, 0.8)
 	_wall(Vector3(32, 1, 12), Vector3(0, 18.5, -10), M.concrete(Color(0.2, 0.2, 0.2))); _wall(Vector3(32, 1, 10), Vector3(0, 18.5, 12), M.concrete(Color(0.2, 0.2, 0.2)))
-	env.background_color = Color(0.5, 0.6, 0.5); env.ambient_light_color = Color(0.4, 0.5, 0.42); env.ambient_light_energy = 0.4; env.fog_light_color = Color(0.3, 0.38, 0.3); env.fog_density = 0.035
+	env.background_color = Color(0.5, 0.6, 0.5); env.ambient_light_color = Color(0.45, 0.55, 0.47); env.ambient_light_energy = 0.8; env.fog_light_color = Color(0.3, 0.38, 0.3); env.fog_density = 0.035
 	_lamp(Vector3(-9, 3, -8), Color(1, 0.7, 0.3), 2.0, 10); _lamp(Vector3(9, 3, 8), Color(1, 0.7, 0.3), 2.0, 10)
 
 func _silt() -> void:
@@ -258,10 +258,10 @@ func _sluice() -> void:
 		M.box(self, Vector3(2.7, 0.02, 0.4), Vector3(cos(a2) * r, 0.012, sin(a2) * r), M.iron(), Vector3(0, rad_to_deg(-a2) + 90, 0))
 	_stand(-10.6, -9, 9, 6.0, 2, 1.0); _stand(10.6, -9, 9, 6.0, 2, -1.0)
 	_props(_scatter(6, ["barrel", "redbarrel", "crate"]))
-	sun.visible = false; env.background_color = Color(0.05, 0.04, 0.03); env.ambient_light_color = Color(0.5, 0.42, 0.3); env.ambient_light_energy = 0.3
-	env.fog_light_color = Color(0.3, 0.24, 0.12); env.fog_density = 0.03
+	sun.visible = false; env.background_color = Color(0.05, 0.04, 0.03); env.ambient_light_color = Color(0.6, 0.52, 0.4); env.ambient_light_energy = 1.0
+	env.fog_light_color = Color(0.3, 0.24, 0.12); env.fog_density = 0.015
 	for sx in [-8.0, 8.0]:
-		for sz in [-8.0, 8.0]: _lamp(Vector3(sx, 8, sz), Color(1, 0.8, 0.35), 3.5, 16, sx > 0 and sz > 0)
+		for sz in [-8.0, 8.0]: _lamp(Vector3(sx * 0.7, 7, sz * 0.7), Color(1, 0.82, 0.45), 8.0, 24, sx > 0 and sz > 0)
 	_wall(Vector3(26, 1, 26), Vector3(0, 14.5, 0), M.iron())
 
 func _cistern() -> void:
@@ -281,9 +281,9 @@ func _cistern() -> void:
 	var wh = M.cyl(self, 0.9, 0.12, wheel_pos, M.rust(Color(0.5, 0.15, 0.1)), Vector3(90, 0, 0), -1.0, 16); wh.name = "wheel"
 	for i in 4: M.box(self, Vector3(1.8, 0.1, 0.1), wheel_pos + Vector3(0, 0, 0.05), M.iron(), Vector3(0, 0, i * 45))
 	M.box(self, Vector3(6, 7, 0.5), Vector3(0, 3.5, -16.8), M.rust(Color(0.25, 0.3, 0.3)))
-	sun.visible = false; env.background_color = Color(0.01, 0.02, 0.03); env.ambient_light_color = Color(0.3, 0.45, 0.5); env.ambient_light_energy = 0.3
-	env.fog_light_color = Color(0.08, 0.16, 0.18); env.fog_density = 0.04
-	for z in [-12.0, 0.0, 12.0]: _lamp(Vector3(0, 9, z), Color(0.55, 0.85, 0.9), 3.0, 18, z == 0.0)
+	sun.visible = false; env.background_color = Color(0.01, 0.02, 0.03); env.ambient_light_color = Color(0.4, 0.55, 0.6); env.ambient_light_energy = 0.9
+	env.fog_light_color = Color(0.1, 0.2, 0.22); env.fog_density = 0.02
+	for z in [-12.0, -4.0, 4.0, 12.0]: _lamp(Vector3(0, 6.5, z), Color(0.6, 0.9, 0.95), 7.0, 22, z == 4.0)
 	_lamp(Vector3(0, 3.5, -15.5), Color(1, 0.75, 0.4), 2.5, 9)
 
 # ---------------- 大結構 ----------------

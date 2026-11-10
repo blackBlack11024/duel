@@ -73,10 +73,10 @@ func _hubshot() -> void:
 	var h = load("res://src/hub.gd").new(); add_child(h)
 	await get_tree().create_timer(1.0).timeout
 	get_viewport().get_texture().get_image().save_png("res://shots/hub_0.png")
-	for m in ["gun", "melee", "rack", "options"]:
+	for m in ["gun", "rack"]:
 		h._open(m)
-		if m == "melee":
-			h.row_i = 3; h.rows[3]["i"] = 1
+		if m == "gun":
+			h.row_i = 0; h.rows[0]["i"] = 1
 		await get_tree().create_timer(0.4).timeout
 		get_viewport().get_texture().get_image().save_png("res://shots/hub_%s.png" % m)
 		h._close()
