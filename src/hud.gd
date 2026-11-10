@@ -154,7 +154,7 @@ func _process(d: float) -> void:
 func _draw_root() -> void:
 	var vs = root.size; var c = vs * 0.5
 	# 煙 / 蟲
-	if smoke > 0.01: root.draw_rect(Rect2(Vector2.ZERO, vs), Color(0.72, 0.7, 0.66, smoke * 0.9))
+	if smoke > 0.01: root.draw_rect(Rect2(Vector2.ZERO, vs), Color(0.72, 0.7, 0.66, smoke * 0.7))
 	if bugs > 0.01:
 		var t = Time.get_ticks_msec() * 0.001
 		for i in 70:

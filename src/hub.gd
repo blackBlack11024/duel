@@ -44,10 +44,10 @@ func _room() -> void:
 	arena.half = Vector2(7, 6)
 	M.solid(arena, Vector3(16, 1, 14), Vector3(0, -0.5, 0), M.concrete(Color(0.3, 0.28, 0.26)))
 	for w in [[Vector3(1, 5, 14), Vector3(-7.5, 2.5, 0)], [Vector3(1, 5, 14), Vector3(7.5, 2.5, 0)], [Vector3(16, 5, 1), Vector3(0, 2.5, -6.5)], [Vector3(16, 5, 1), Vector3(0, 2.5, 6.5)], [Vector3(16, 1, 14), Vector3(0, 5.5, 0)]]:
-		M.solid(arena, w[0], w[1], M.rust(Color(0.32, 0.27, 0.22)))
+		M.solid(arena, w[0], w[1], M.concrete(Color(0.34, 0.31, 0.28)))
 	arena.sun.visible = false
-	arena.env.background_color = Color(0.02, 0.02, 0.02); arena.env.ambient_light_color = Color(0.5, 0.4, 0.3); arena.env.ambient_light_energy = 0.35; arena.env.fog_density = 0.01
-	arena._lamp(Vector3(0, 4.2, 1), Color(1.0, 0.8, 0.55), 3.0, 12, true)
+	arena.env.background_color = Color(0.02, 0.02, 0.02); arena.env.ambient_light_color = Color(0.6, 0.55, 0.5); arena.env.ambient_light_energy = 0.75; arena.env.fog_density = 0.01
+	arena._lamp(Vector3(0, 4.2, 1), Color(1.0, 0.85, 0.65), 4.0, 14, true); arena._lamp(Vector3(-3, 4.2, -3), Color(1.0, 0.85, 0.65), 2.5, 10); arena._lamp(Vector3(3, 4.2, 3.5), Color(1.0, 0.85, 0.65), 2.5, 10)
 	# 工作檯（改槍）
 	M.solid(arena, Vector3(2.6, 0.9, 0.9), Vector3(-6.2, 0.45, 2.5), M.wood(), Vector3(0, 90, 0))
 	M.box(arena, Vector3(0.5, 0.25, 0.3), Vector3(-6.3, 1.05, 3.2), M.iron()); arena._lamp(Vector3(-6.4, 2.2, 2.5), Color(0.9, 0.95, 1.0), 1.6, 5)
@@ -80,10 +80,11 @@ func _room() -> void:
 	for k in 6:
 		M.box(arena, Vector3(0.12, 0.5, 0.05), Vector3(3.75 + k * 0.3, 2.6, -5.8), M.glow(Color(0.5, 0.85, 1.0), 2.5) if k < g else M.iron())
 	_st("door", Vector3(4.5, 1.6, -5.8))
-	# 對戰的門
-	M.box(arena, Vector3(0.2, 3.0, 2.0), Vector3(6.95, 1.5, 0.5), M.rust(Color(0.4, 0.2, 0.15))); arena._lamp(Vector3(6.4, 3.3, 0.5), Color(1.0, 0.3, 0.2), 1.6, 4)
-	for sx in [-0.3, 0.3]: M.cap(arena, 0.12, 0.9, Vector3(6.8, 2.0, 0.5 + sx), M.iron())
-	_st("lobby", Vector3(6.8, 1.6, 0.5))
+	# 對戰的門（G.ONLINE 關閉時不蓋）
+	if G.ONLINE:
+		M.box(arena, Vector3(0.2, 3.0, 2.0), Vector3(6.95, 1.5, 0.5), M.rust(Color(0.4, 0.2, 0.15))); arena._lamp(Vector3(6.4, 3.3, 0.5), Color(1.0, 0.3, 0.2), 1.6, 4)
+		for sx in [-0.3, 0.3]: M.cap(arena, 0.12, 0.9, Vector3(6.8, 2.0, 0.5 + sx), M.iron())
+		_st("lobby", Vector3(6.8, 1.6, 0.5))
 
 # ---------------- 覆寫 ----------------
 func _on_player_ev(n: String, data) -> void:
@@ -124,11 +125,13 @@ func _open(id: String) -> void:
 		else: G.main.go("fight", {"mode": "story", "boss": G.boss_id()})
 		return
 	mode = id; row_i = 0; pctrl.locked = true; player.reset_intent(); hud.prompt(""); hud.hide_cross = true
+	pctrl.vm.visible = false; boss.ctrl = null; boss.set_state(St.IDLE); boss.reset_intent()
 	_build_rows()
 
 func _close() -> void:
 	if mode == "lobby" and Net.active: Net.close()
 	mode = ""; pctrl.locked = false; hud.hide_cross = false; _preview(""); G.save()
+	pctrl.vm.visible = true; boss.ctrl = ai
 	lobby = {"state": "menu", "code": [], "entry": [], "mode": 0, "pts": 10, "their": null, "ready": false}
 	_reequip()
 

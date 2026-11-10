@@ -4,6 +4,7 @@ var main
 var S: Dictionary = {}
 const SAVE = "user://save.json"
 var mouse_sens = 0.0022
+const ONLINE = false   # 連線對戰暫時關閉。改成 true 會在工棚開出對戰的門。
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS

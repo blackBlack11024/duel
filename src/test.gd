@@ -20,6 +20,7 @@ func _ready() -> void:
 		"sim": _sim(args[i + 2], float(args[i + 3]), int(args[i + 4]))
 		"shot": _shot(args[i + 2], float(args[i + 3]))
 		"hub": _hubshot()
+		"net": _net(args[i + 2])
 
 func _mk(boss: String) -> Node:
 	var f = load("res://src/fight.gd").new(); f.cfg = {"mode": "story", "boss": boss}
@@ -75,4 +76,24 @@ func _hubshot() -> void:
 		await get_tree().create_timer(0.4).timeout
 		get_viewport().get_texture().get_image().save_png("res://shots/hub_%s.png" % m)
 		h._close()
+	get_tree().quit()
+
+func _net(role: String) -> void:
+	var lo = {"melee": "laoban", "gun": "liukong", "gadget": "", "core": "xiejian", "mods": {}, "extra_flask": 0}
+	if role == "host":
+		Net.host()
+		await Net.peer_joined
+	else:
+		Net.join(Net.encode("127.0.0.1"))
+		await Net.peer_joined
+	print(role, " connected")
+	var f = load("res://src/fight.gd").new(); f.cfg = {"mode": "versus", "my": lo, "their": lo, "arena": "spillway"}
+	add_child(f)
+	var bot = BotS.new(); bot.skill = 0.5 if role == "host" else 0.2; f.pctrl.bot = bot
+	var t = 0.0
+	while t < 40.0:
+		await get_tree().create_timer(5.0).timeout
+		t += 5.0
+		if not is_instance_valid(f): break
+		print("%s t=%.0f myhp=%.0f foehp=%.0f wins=%s dist=%.1f state=%d" % [role, t, f.player.hp, f.boss.hp, str(f.wins), f.player.dist_to(f.boss), f.player.state])
 	get_tree().quit()
