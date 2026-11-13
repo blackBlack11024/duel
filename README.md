@@ -2,7 +2,10 @@
 
 第一人稱 3D 決鬥遊戲。在乾掉的水庫底，用你自己改的傢伙，一場一場把閘門打開。
 
-- 企劃書：[docs/GDD.md](docs/GDD.md)
+> **改版中**：遊戲正要改成西部決鬥《六響》。新企劃在 [docs/GDD.md](docs/GDD.md)，待確認；目前的程式仍是舊版《落閘》。
+
+- 新企劃（草案）：[docs/GDD.md](docs/GDD.md)
+- 舊企劃：[docs/archive/](docs/archive/)
 - 引擎：Godot 4.4（Compatibility 渲染器）。所有場景、模型、動作都由程式產生，沒有美術素材檔。
 
 ## 執行
